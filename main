@@ -1,0 +1,256 @@
+#include <stdio.h>
+#include <windows.h>
+#include <conio.h>
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define ENTER 13
+
+// 커서 숨기기
+void HideCursor()
+{
+    CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+    cursorInfo.bVisible = 0;
+    cursorInfo.dwSize = 1;
+
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
+// 글자 색 변경
+void SetColor(int color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+// 커서 위치 이동
+void GotoXY(int x, int y)
+{
+    COORD pos = { x, y };
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+// =========================
+// 팀 로고 화면
+// =========================
+void LogoScreen()
+{
+    system("cls");
+
+    SetColor(14);
+
+    printf("\n\n");
+
+    printf("        ________________________\n");
+    printf("       |.----------------------.|\n");
+    printf("       ||                      ||\n");
+    printf("       ||       ______         ||\n");
+    printf("       ||     .;;;;;;;;.       ||\n");
+    printf("       ||    /;;;;;;;;;;;\\\\     ||\n");
+    printf("       ||   /;/`    `-;;;;; . .||\n");
+    printf("       ||   |;|__  __  \\\\;;;|   ||\n");
+    printf("       ||.-.|;| e`/e`  |;;;|   ||\n");
+    printf("       ||   |;|  |     |;;;|'--||\n");
+    printf("       ||   |;|  '-    |;;;|   ||\n");
+    printf("       ||   |;;\\\\ --'  /|;;;|   ||\n");
+    printf("       ||   |;;;;;---'\\\\|;;;|   ||\n");
+    printf("       ||   |;;;;|     |;;;|   ||\n");
+    printf("       ||   |;;.-'     |;;;|   ||\n");
+    printf("       ||'--|/`        |;;;|--.||\n");
+    printf("       ||;;;;    .     ;;;;.\\\\;;||\n");
+    printf("       ||;;;;;-.;_    /.-;;;;;;||\n");
+    printf("       ||;;;;;;;;;;;;;;;;;;;;;;||\n");
+    printf("       ||jgs;;;;;;;;;;;;;;;;;;;||\n");
+    printf("       '------------------------'\n");
+
+    SetColor(11);
+
+    printf("\n");
+    printf("              TEAM 늙은이들\n");
+
+    Sleep(2000); // 2초 대기
+
+    system("cls");
+}
+
+// =========================
+// 만든 사람 화면
+// =========================
+void TeamPage()
+{
+    system("cls");
+
+    SetColor(11);
+
+    printf("\n\n");
+    printf("        ===== 만든 사람 =====\n\n");
+
+    printf("        팀장 : 김언국\n");
+    printf("        팀원 : 김바다\n");
+    printf("        팀원 : 강민\n\n");
+
+    SetColor(14);
+
+    printf("     엔터를 누르면 돌아갑니다.");
+
+    while (1)
+    {
+        if (_getch() == ENTER)
+            break;
+    }
+}
+
+// =========================
+// 사용 설명서 화면
+// =========================
+void HelpPage()
+{
+    system("cls");
+
+    SetColor(10);
+
+    printf("\n\n");
+    printf("        ===== 사용 설명서 =====\n\n");
+
+    printf("        ↑ ↓ 방향키로 이동\n");
+    printf("        ENTER 키로 선택\n\n");
+
+    SetColor(14);
+
+    printf("     엔터를 누르면 돌아갑니다.");
+
+    while (1)
+    {
+        if (_getch() == ENTER)
+            break;
+    }
+}
+
+// =========================
+// 메인 함수
+// =========================
+int main()
+{
+    HideCursor();
+
+    // 시작 로고
+    LogoScreen();
+
+    int menu = 0;
+
+    char* title[4] = {
+        "게임 시작",
+        "게임 종료",
+        "만든 사람",
+        "사용 설명서"
+    };
+
+    while (1)
+    {
+        system("cls");
+
+        // 게임 로고
+        SetColor(13);
+
+        printf("\n\n");
+
+        printf("     #################################\n");
+        printf("     #                               #\n");
+        printf("     #          F는 못 받아          #\n");
+        printf("     #                               #\n");
+        printf("     #################################\n\n");
+
+        // 메뉴 출력
+        for (int i = 0; i < 4; i++)
+        {
+            if (menu == i)
+            {
+                SetColor(12);
+
+                printf("            > %s <\n", title[i]);
+            }
+            else
+            {
+                SetColor(7);
+
+                printf("              %s\n", title[i]);
+            }
+        }
+
+        int key = _getch();
+
+        // 방향키 입력
+        if (key == 224)
+        {
+            key = _getch();
+
+            // 위 방향키
+            if (key == KEY_UP)
+            {
+                menu--;
+
+                if (menu < 0)
+                    menu = 3;
+            }
+
+            // 아래 방향키
+            else if (key == KEY_DOWN)
+            {
+                menu++;
+
+                if (menu > 3)
+                    menu = 0;
+            }
+        }
+
+        // 엔터 입력
+        else if (key == ENTER)
+        {
+            switch (menu)
+            {
+                // 게임 시작
+            case 0:
+
+                system("cls");
+
+                SetColor(10);
+
+                printf("\n\n");
+                printf("          게임 시작!\n");
+
+                Sleep(1000);
+
+                break;
+
+                // 게임 종료
+            case 1:
+
+                system("cls");
+
+                SetColor(12);
+
+                printf("\n\n");
+                printf("          게임을 종료합니다.\n");
+
+                Sleep(1000);
+
+                return 0;
+
+                // 만든 사람
+            case 2:
+
+                TeamPage();
+
+                break;
+
+                // 사용 설명서
+            case 3:
+
+                HelpPage();
+
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
