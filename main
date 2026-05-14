@@ -45,10 +45,10 @@ void show_title() {
     for (int i = 0; i < top_pad; i++) printf("\n");
 
     // ===== NO F (가로 42칸) =====
-    print_centered("ooooo      ooo                oooooooooooo", W);
-    print_centered("`888b.     `8'                `888'     `8", W);
-    print_centered(" 8 `88b.    8   .ooooo.        888        ", W);
-    print_centered(" 8   `88b.  8  d88' `88b       888oooo8   ", W);
+    print_centered("ooooo      ooo                 oooooooooooo", W);
+    print_centered("`888b.     `8'                 `888'     `8", W);
+    print_centered(" 8 `88b.    8   .ooooo.         888        ", W);
+    print_centered(" 8   `88b.  8  d88' `88b        888oooo8   ", W);
     print_centered(" 8     `88b.8  888   888        888    \" ", W);
     print_centered(" 8       `888  888   888        888       ", W);
     print_centered("o8o        `8  `Y8bod8P'       o888o      ", W);
@@ -56,10 +56,10 @@ void show_title() {
     printf("\n");
 
     // ===== NO HEALTH (가로 91칸) =====
-    print_centered("ooooo      ooo                ooooo   ooooo                     oooo      .   oooo        ", W);
-    print_centered("`888b.     `8'                `888'   `888'                     `888    .o8   `888        ", W);
-    print_centered(" 8 `88b.    8   .ooooo.        888     888   .ooooo.   .oooo.    888  .o888oo  888 .oo.   ", W);
-    print_centered(" 8   `88b.  8  d88' `88b       888ooooo888  d88' `88b `P  )88b   888    888    888P\"Y88b  ", W);
+    print_centered("ooooo      ooo                 ooooo   ooooo                     oooo      .   oooo        ", W);
+    print_centered("`888b.     `8'                 `888'   `888'                     `888    .o8   `888        ", W);
+    print_centered(" 8 `88b.    8   .ooooo.         888     888   .ooooo.   .oooo.    888  .o888oo  888 .oo.   ", W);
+    print_centered(" 8   `88b.  8  d88' `88b        888ooooo888  d88' `88b `P  )88b   888    888    888P\"Y88b  ", W);
     print_centered(" 8     `88b.8  888   888        888     888  888ooo888  .oP\"888   888    888    888   888 ", W);
     print_centered(" 8       `888  888   888        888     888  888    .o d8(  888   888    888 .  888   888 ", W);
     print_centered("o8o        `8  `Y8bod8P'       o888o   o888o `Y8bod8P' `Y888\"\"8o o888o   \"888\" o888o o888o", W);
@@ -119,11 +119,6 @@ void show_play_info() {
     print_centered_kr("체력이 높을수록  ->  학점 낮음", W, 32);
     print_centered_kr("체력이 낮을수록  ->  학점 높음", W, 32);
     printf("\n");
-    print_centered_kr("[ 엔딩 조건 ]", W, 14);
-    printf("\n");
-    print_centered_kr("체력 50 이상  ->  졸업 엔딩", W, 28);
-    print_centered_kr("체력 50 미만  ->  대원가 엔딩", W, 30);
-    printf("\n");
     print_centered_kr("[ 조작법 ]", W, 11);
     printf("\n");
     print_centered_kr("숫자 1~4  :  선택지 고르기", W, 28);
@@ -145,17 +140,15 @@ void show_team_info() {
     print_centered_kr("         [ 팀 소개 ]           ", W, 32);
     print_centered("================================", W);
     printf("\n");
-    print_centered_kr("팀명   :  미정", W, 15);
-    printf("\n");
     print_centered_kr("[ 팀원 ]", W, 9);
     printf("\n");
-    print_centered_kr("기획 / 스토리   :  -", W, 22);
-    print_centered_kr("프론트 / UI     :  -", W, 22);
-    print_centered_kr("백엔드 / 시스템 :  -", W, 22);
+    print_centered_kr("기획 / 스토리   :  김바다", W, 22);
+    print_centered_kr("프론트 / UI     :  강민", W, 22);
+    print_centered_kr("백엔드 / 시스템 :  김언국", W, 22);
     printf("\n");
     print_centered("================================", W);
     printf("\n");
-    print_centered_kr("제작  :  2025", W, 14);
+    print_centered_kr("제작  :  2026", W, 14);
     print_centered_kr("버전  :  ver 1.0", W, 17);
     printf("\n");
     print_centered("================================", W);
