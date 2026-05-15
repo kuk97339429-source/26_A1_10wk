@@ -1,191 +1,282 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <conio.h>
+
+// ===== 색상 코드 =====
+#define RESET   “\033[0m”
+#define BOLD    “\033[1m”
+#define YELLOW  “\033[1;33m”
+#define GREEN   “\033[1;32m”
+#define RED     “\033[1;31m”
+#define CYAN    “\033[1;36m”
+#define GRAY    “\033[90m”
+
+// ===== 키 코드 =====
+#define KEY_UP    72
+#define KEY_DOWN  80
+#define KEY_ENTER 13
 
 int get_terminal_width() {
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+CONSOLE_SCREEN_BUFFER_INFO csbi;
+GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 }
 
 int get_terminal_height() {
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+CONSOLE_SCREEN_BUFFER_INFO csbi;
+GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
 
-// 영문 기준 가운데 정렬 (아스키 아트, 구분선용)
 void print_centered(const char* line, int term_w) {
-    int line_len = 0;
-    while (line[line_len]) line_len++;
-    int pad = (term_w - line_len) / 2;
-    if (pad < 0) pad = 0;
-    for (int i = 0; i < pad; i++) printf(" ");
-    printf("%s\n", line);
+int line_len = 0;
+while (line[line_len]) line_len++;
+int pad = (term_w - line_len) / 2;
+if (pad < 0) pad = 0;
+for (int i = 0; i < pad; i++) printf(” “);
+printf(”%s\n”, line);
 }
 
-// 한글이 포함된 문자열 가운데 정렬용 (수동으로 표시 폭 지정)
 void print_centered_kr(const char* line, int term_w, int display_width) {
-    int pad = (term_w - display_width) / 2;
-    if (pad < 0) pad = 0;
-    for (int i = 0; i < pad; i++) printf(" ");
-    printf("%s\n", line);
+int pad = (term_w - display_width) / 2;
+if (pad < 0) pad = 0;
+for (int i = 0; i < pad; i++) printf(” “);
+printf(”%s\n”, line);
 }
 
-void show_title() {
-    system("cls");
-    system("chcp 65001 > nul");
+// 메뉴 한 줄 - 선택 여부에 따라 색상/화살표 다름
+void print_menu_item(const char* label, int term_w, int is_selected) {
+int display_width = 26;  // “ > [ 1 ]   게임 시작     “ 기준
+int pad = (term_w - display_width) / 2;
+if (pad < 0) pad = 0;
+for (int i = 0; i < pad; i++) printf(” “);
 
-    int W = get_terminal_width();
-    int H = get_terminal_height();
+```
+if (is_selected) {
+    printf(YELLOW " > %s " RESET "\n", label);  // 화살표 + 노랑
+} else {
+    printf(GRAY "   %s " RESET "\n", label);   // 회색
+}
+```
 
-    int content_h = 34;
-    int top_pad = (H - content_h) / 2;
-    if (top_pad < 0) top_pad = 0;
-    for (int i = 0; i < top_pad; i++) printf("\n");
-
-    // ===== NO F (가로 42칸) =====
-    print_centered("ooooo      ooo                 oooooooooooo", W);
-    print_centered("`888b.     `8'                 `888'     `8", W);
-    print_centered(" 8 `88b.    8   .ooooo.         888        ", W);
-    print_centered(" 8   `88b.  8  d88' `88b        888oooo8   ", W);
-    print_centered(" 8     `88b.8  888   888        888    \" ", W);
-    print_centered(" 8       `888  888   888        888       ", W);
-    print_centered("o8o        `8  `Y8bod8P'       o888o      ", W);
-
-    printf("\n");
-
-    // ===== NO HEALTH (가로 91칸) =====
-    print_centered("ooooo      ooo                 ooooo   ooooo                     oooo      .   oooo        ", W);
-    print_centered("`888b.     `8'                 `888'   `888'                     `888    .o8   `888        ", W);
-    print_centered(" 8 `88b.    8   .ooooo.         888     888   .ooooo.   .oooo.    888  .o888oo  888 .oo.   ", W);
-    print_centered(" 8   `88b.  8  d88' `88b        888ooooo888  d88' `88b `P  )88b   888    888    888P\"Y88b  ", W);
-    print_centered(" 8     `88b.8  888   888        888     888  888ooo888  .oP\"888   888    888    888   888 ", W);
-    print_centered(" 8       `888  888   888        888     888  888    .o d8(  888   888    888 .  888   888 ", W);
-    print_centered("o8o        `8  `Y8bod8P'       o888o   o888o `Y8bod8P' `Y888\"\"8o o888o   \"888\" o888o o888o", W);
-
-    printf("\n");
-    print_centered("~ No Health, No Life ~", W);
-    printf("\n");
-    print_centered("================================================================", W);
-    printf("\n");
-    // 메뉴 항목들을 같은 시작 위치로 맞춤
-    // 가장 긴 "플레이 소개"(22칸) 기준으로 통일하여 왼쪽 정렬 효과
-    print_centered_kr("[ 1 ]   게임 시작     ", W, 22);
-    printf("\n");
-    print_centered_kr("[ 2 ]   플레이 소개   ", W, 22);
-    printf("\n");
-    print_centered_kr("[ 3 ]   팀 소개       ", W, 22);
-    printf("\n");
-    print_centered_kr("[ 4 ]   게임 종료     ", W, 22);
-    printf("\n\n");
-    print_centered("================================================================", W);
-    printf("\n");
-    print_centered_kr("체력이 높으면 졸업  /  낮으면 대원가        ver 1.0", W, 50);
-    printf("\n\n");
-    print_centered_kr("선택 >> ", W, 9);
 }
 
-int get_choice() {
-    char c = getchar();
-    getchar();
-    return c - '0';
+// 타이틀 화면 (선택된 메뉴 인덱스 0~3을 받아 색상 다르게)
+void show_title(int selected) {
+system(“cls”);
+system(“chcp 65001 > nul”);
+
+```
+int W = get_terminal_width();
+int H = get_terminal_height();
+
+int content_h = 34;
+int top_pad = (H - content_h) / 2;
+if (top_pad < 0) top_pad = 0;
+for (int i = 0; i < top_pad; i++) printf("\n");
+
+// ===== NO F (노란색) =====
+printf(YELLOW);
+print_centered("ooooo      ooo                oooooooooooo", W);
+print_centered("`888b.     `8'                `888'     `8", W);
+print_centered(" 8 `88b.    8   .ooooo.        888        ", W);
+print_centered(" 8   `88b.  8  d88' `88b       888oooo8   ", W);
+print_centered(" 8     `88b.8  888   888        888    \" ", W);
+print_centered(" 8       `888  888   888        888       ", W);
+print_centered("o8o        `8  `Y8bod8P'       o888o      ", W);
+printf(RESET);
+
+printf("\n");
+
+// ===== NO HEALTH (빨간색) =====
+printf(RED);
+print_centered("ooooo      ooo                ooooo   ooooo                     oooo      .   oooo        ", W);
+print_centered("`888b.     `8'                `888'   `888'                     `888    .o8   `888        ", W);
+print_centered(" 8 `88b.    8   .ooooo.        888     888   .ooooo.   .oooo.    888  .o888oo  888 .oo.   ", W);
+print_centered(" 8   `88b.  8  d88' `88b       888ooooo888  d88' `88b `P  )88b   888    888    888P\"Y88b  ", W);
+print_centered(" 8     `88b.8  888   888        888     888  888ooo888  .oP\"888   888    888    888   888 ", W);
+print_centered(" 8       `888  888   888        888     888  888    .o d8(  888   888    888 .  888   888 ", W);
+print_centered("o8o        `8  `Y8bod8P'       o888o   o888o `Y8bod8P' `Y888\"\"8o o888o   \"888\" o888o o888o", W);
+printf(RESET);
+
+printf("\n");
+printf(CYAN);
+print_centered("~ No Health, No Life ~", W);
+printf(RESET);
+printf("\n");
+printf(GRAY);
+print_centered("================================================================", W);
+printf(RESET);
+printf("\n");
+
+// 메뉴 (선택된 항목만 노랑 + 화살표)
+print_menu_item("[ 1 ]   게임 시작     ", W, selected == 0);
+printf("\n");
+print_menu_item("[ 2 ]   플레이 소개   ", W, selected == 1);
+printf("\n");
+print_menu_item("[ 3 ]   팀 소개       ", W, selected == 2);
+printf("\n");
+print_menu_item("[ 4 ]   게임 종료     ", W, selected == 3);
+
+printf("\n\n");
+printf(GRAY);
+print_centered("================================================================", W);
+printf(RESET);
+printf("\n");
+print_centered_kr("체력이 높으면 졸업  /  낮으면 대원가        ver 1.0", W, 50);
+printf("\n\n");
+printf(GREEN);
+print_centered_kr("[ 화살표 위/아래 = 이동    엔터 = 선택 ]", W, 42);
+printf(RESET);
+```
+
 }
 
 void pause_game() {
-    int W = get_terminal_width();
-    printf("\n");
-    print_centered_kr("[ 엔터를 누르면 돌아가기 ]", W, 28);
-    getchar();
+int W = get_terminal_width();
+printf(”\n”);
+printf(GREEN);
+print_centered_kr(”[ 엔터를 누르면 돌아가기 ]”, W, 28);
+printf(RESET);
+while (_getch() != KEY_ENTER);
 }
 
 void show_play_info() {
-    system("cls");
-    int W = get_terminal_width();
-    int H = get_terminal_height();
-    int top = (H - 20) / 2;
-    if (top < 0) top = 0;
-    for (int i = 0; i < top; i++) printf("\n");
+system(“cls”);
+int W = get_terminal_width();
+int H = get_terminal_height();
+int top = (H - 20) / 2;
+if (top < 0) top = 0;
+for (int i = 0; i < top; i++) printf(”\n”);
 
-    print_centered("================================", W);
-    print_centered_kr("       [ 플레이 소개 ]         ", W, 32);
-    print_centered("================================", W);
-    printf("\n");
-    print_centered_kr("장르   : 텍스트 기반 턴제 게임", W, 31);
-    print_centered_kr("목표   : 교수님과의 싸움에서 살아남기", W, 38);
-    printf("\n");
-    print_centered_kr("[ 핵심 규칙 ]", W, 14);
-    printf("\n");
-    print_centered_kr("체력이 높을수록  ->  학점 낮음", W, 32);
-    print_centered_kr("체력이 낮을수록  ->  학점 높음", W, 32);
-    printf("\n");
-    print_centered_kr("[ 조작법 ]", W, 11);
-    printf("\n");
-    print_centered_kr("숫자 1~4  :  선택지 고르기", W, 28);
-    print_centered_kr("엔터      :  다음으로 진행", W, 26);
-    printf("\n");
-    print_centered("================================", W);
-    pause_game();
+```
+printf(CYAN);
+print_centered("================================", W);
+print_centered_kr("       [ 플레이 소개 ]         ", W, 32);
+print_centered("================================", W);
+printf(RESET);
+printf("\n");
+print_centered_kr("장르   : 텍스트 기반 턴제 게임",       W, 31);
+print_centered_kr("목표   : 교수님과의 싸움에서 살아남기", W, 38);
+printf("\n");
+printf(YELLOW);
+print_centered_kr("[ 핵심 규칙 ]", W, 14);
+printf(RESET);
+printf("\n");
+print_centered_kr("체력이 높을수록  ->  학점 낮음", W, 32);
+print_centered_kr("체력이 낮을수록  ->  학점 높음", W, 32);
+printf("\n");
+printf(YELLOW);
+print_centered_kr("[ 엔딩 조건 ]", W, 14);
+printf(RESET);
+printf("\n");
+printf(YELLOW);
+print_centered_kr("[ 조작법 ]", W, 11);
+printf(RESET);
+printf("\n");
+print_centered_kr("숫자 1~4  :  선택지 고르기", W, 28);
+print_centered_kr("엔터      :  다음으로 진행", W, 26);
+printf("\n");
+printf(CYAN);
+print_centered("================================", W);
+printf(RESET);
+pause_game();
+```
+
 }
 
 void show_team_info() {
-    system("cls");
-    int W = get_terminal_width();
-    int H = get_terminal_height();
-    int top = (H - 18) / 2;
-    if (top < 0) top = 0;
-    for (int i = 0; i < top; i++) printf("\n");
+system(“cls”);
+int W = get_terminal_width();
+int H = get_terminal_height();
+int top = (H - 18) / 2;
+if (top < 0) top = 0;
+for (int i = 0; i < top; i++) printf(”\n”);
 
-    print_centered("================================", W);
-    print_centered_kr("         [ 팀 소개 ]           ", W, 32);
-    print_centered("================================", W);
-    printf("\n");
-    print_centered_kr("[ 팀원 ]", W, 9);
-    printf("\n");
-    print_centered_kr("기획 / 스토리   :  김바다", W, 22);
-    print_centered_kr("프론트 / UI     :  강민", W, 22);
-    print_centered_kr("백엔드 / 시스템 :  김언국", W, 22);
-    printf("\n");
-    print_centered("================================", W);
-    printf("\n");
-    print_centered_kr("제작  :  2026", W, 14);
-    print_centered_kr("버전  :  ver 1.0", W, 17);
-    printf("\n");
-    print_centered("================================", W);
-    pause_game();
+```
+printf(CYAN);
+print_centered("================================", W);
+print_centered_kr("         [ 팀 소개 ]           ", W, 32);
+print_centered("================================", W);
+printf(RESET);
+printf("\n");
+printf(YELLOW);
+print_centered_kr("[ 팀원 ]", W, 9);
+printf(RESET);
+printf("\n");
+print_centered_kr("기획 / 스토리   :  김바다",  W, 22);
+print_centered_kr("프론트 / UI     :  강민",  W, 22);
+print_centered_kr("백엔드 / 시스템 :  김언국",  W, 22);
+printf("\n");
+printf(CYAN);
+print_centered("================================", W);
+printf(RESET);
+printf("\n");
+print_centered_kr("제작  :  2026",   W, 14);
+print_centered_kr("버전  :  ver 1.0", W, 17);
+printf("\n");
+printf(CYAN);
+print_centered("================================", W);
+printf(RESET);
+pause_game();
+```
+
 }
 
 int main() {
-    int choice;
-    while (1) {
-        show_title();
-        choice = get_choice();
+int selected = 0;  // 현재 선택된 메뉴 (0~3)
+int key;
 
-        if (choice == 1) {
+```
+while (1) {
+    show_title(selected);
+
+    key = _getch();
+
+    // 방향키는 두 번 입력 (224 다음에 실제 코드 옴)
+    if (key == 224 || key == 0) {
+        key = _getch();
+        if (key == KEY_UP) {
+            selected = (selected - 1 + 4) % 4;  // 위, 순환
+        } else if (key == KEY_DOWN) {
+            selected = (selected + 1) % 4;       // 아래, 순환
+        }
+    } else if (key == KEY_ENTER) {
+        // 선택된 메뉴 실행
+        if (selected == 0) {
             system("cls");
             int W = get_terminal_width();
             int H = get_terminal_height();
             for (int i = 0; i < H / 2; i++) printf("\n");
+            printf(GREEN);
             print_centered_kr("게임을 시작합니다...", W, 22);
+            printf(RESET);
             printf("\n");
             // stage1() 여기 연결 예정
             pause_game();
-        }
-        else if (choice == 2) {
+        } else if (selected == 1) {
             show_play_info();
-        }
-        else if (choice == 3) {
+        } else if (selected == 2) {
             show_team_info();
-        }
-        else if (choice == 4) {
+        } else if (selected == 3) {
             system("cls");
             int W = get_terminal_width();
             int H = get_terminal_height();
             for (int i = 0; i < H / 2; i++) printf("\n");
+            printf(RED);
             print_centered_kr("게임을 종료합니다...", W, 22);
+            printf(RESET);
             printf("\n");
             break;
         }
     }
-    return 0;
+    // 숫자키 1~4도 단축키로 지원
+    else if (key >= '1' && key <= '4') {
+        selected = key - '1';
+    }
+}
+return 0;
+```
+
 }
