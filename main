@@ -62,7 +62,8 @@ void print_menu_item(const char* label, int term_w, int is_selected) {
 
     if (is_selected) {
         printf(YELLOW " > %s " RESET "\n", label);
-    } else {
+    }
+    else {
         printf(GRAY "   %s " RESET "\n", label);
     }
 }
@@ -80,7 +81,7 @@ void show_title(int selected) {
     if (top_pad < 0) top_pad = 0;
     for (int i = 0; i < top_pad; i++) printf("\n");
 
-// ===== NO F (노란색) =====
+    // ===== NO F (노란색) =====
     printf(YELLOW);
     print_centered("ooooo      ooo                oooooooooooo", W);
     print_centered("`888b.     `8'                `888'     `8", W);
@@ -113,7 +114,7 @@ void show_title(int selected) {
     printf(RESET);
     printf("\n");
 
-// 메뉴 (선택된 항목만 노랑 + 화살표)
+    // 메뉴 (선택된 항목만 노랑 + 화살표)
     print_menu_item("[ 1 ]   게임 시작     ", W, selected == 0);
     printf("\n");
     print_menu_item("[ 2 ]   플레이 소개   ", W, selected == 1);
@@ -157,7 +158,7 @@ void show_play_info() {
     print_centered("================================", W);
     printf(RESET);
     printf("\n");
-    print_centered_kr("장르   : 텍스트 기반 턴제 게임",       W, 31);
+    print_centered_kr("장르   : 텍스트 기반 턴제 게임", W, 31);
     print_centered_kr("목표   : 교수님과의 싸움에서 살아남기", W, 38);
     printf("\n");
     printf(YELLOW);
@@ -200,15 +201,15 @@ void show_team_info() {
     print_centered_kr("[ 팀원 ]", W, 9);
     printf(RESET);
     printf("\n");
-    print_centered_kr("기획 / 스토리   :  김바다",  W, 22);
-    print_centered_kr("프론트 / UI     :  강민",  W, 22);
-    print_centered_kr("백엔드 / 시스템 :  김언국",  W, 22);
+    print_centered_kr("기획 / 스토리   :  김바다", W, 22);
+    print_centered_kr("프론트 / UI     :  강민", W, 22);
+    print_centered_kr("백엔드 / 시스템 :  김언국", W, 22);
     printf("\n");
     printf(CYAN);
     print_centered("================================", W);
     printf(RESET);
     printf("\n");
-    print_centered_kr("제작  :  2026",   W, 14);
+    print_centered_kr("제작  :  2026", W, 14);
     print_centered_kr("버전  :  ver 1.0", W, 17);
     printf("\n");
     printf(CYAN);
@@ -229,10 +230,12 @@ int main() {
             key = _getch();
             if (key == KEY_UP) {
                 selected = (selected - 1 + 4) % 4;
-            } else if (key == KEY_DOWN) {
+            }
+            else if (key == KEY_DOWN) {
                 selected = (selected + 1) % 4;
             }
-        } else if (key == KEY_ENTER) {
+        }
+        else if (key == KEY_ENTER) {
             if (selected == 0) {
                 system("cls");
                 int W = get_terminal_width();
@@ -243,11 +246,14 @@ int main() {
                 printf(RESET);
                 printf("\n");
                 pause_game();
-            } else if (selected == 1) {
+            }
+            else if (selected == 1) {
                 show_play_info();
-            } else if (selected == 2) {
+            }
+            else if (selected == 2) {
                 show_team_info();
-            } else if (selected == 3) {
+            }
+            else if (selected == 3) {
                 system("cls");
                 int W = get_terminal_width();
                 int H = get_terminal_height();
@@ -259,8 +265,8 @@ int main() {
                 break;
             }
         }
-     // 숫자키 1~4도 단축키로 지원
-    else if (key >= '1' && key <= '4') {
+        // 숫자키 1~4도 단축키로 지원
+        else if (key >= '1' && key <= '4') {
             selected = key - '1';
         }
     }
