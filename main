@@ -21,14 +21,15 @@
 #define KEY_DOWN  80
 #define KEY_ENTER 13
 
-//터미널 정보
+// 터미널 정보
+// 가로줄 수 구하기
 int get_terminal_width() {
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    CONSOLE_SCREEN_BUFFER_INFO csbi; // 빈 버퍼 만들기, 커서 위치, 현재 보이는 창 영역 
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi); // 식별번호 부여 및 식별번호에 따라 정보 넣기
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;  // 가로줄 정보 읽어서 줌
 }
 
-//터미널 창의 세로 줄 수 구하기
+// 세로줄 수 구하기
 int get_terminal_height() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -106,7 +107,7 @@ void show_title(int selected) {
 
     printf("\n");
     printf(CYAN);
-    print_centered("~ No Health, No Life ~", W);
+    print_centered("~ No Health, No Life ~", W); 
     printf(RESET);
     printf("\n");
     printf(GRAY);
