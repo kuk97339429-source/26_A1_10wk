@@ -3,6 +3,12 @@
 #include <windows.h>
 #include <conio.h>
 
+//stdio.h 입출력 기본
+//stdlib.h 유틸리티
+//windows.h 윈도우 API
+//conio.h 즉시 입력
+
+
 // ===== 색상 코드 =====
 #define RESET   “\033[0m”
 #define BOLD    “\033[1m”
