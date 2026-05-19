@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
+// 안녕하세요.
 
 //stdio.h 입출력 기본
 //stdlib.h 유틸리티
