@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <conio.h>
 // 안녕하세요.
-// 저도 20학번 김바다인데요?
+// 저도 20학번 김바다인데요?sdas
 
 //stdio.h 입출력 기본
 //stdlib.h 유틸리티
